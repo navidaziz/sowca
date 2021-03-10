@@ -1,0 +1,32 @@
+<?php 
+	$lang['student_name'] = 'Student Name';
+		$lang['father_name'] = 'Father Name';
+		$lang['gender'] = 'Gender';
+		$lang['address'] = 'Address';
+		$lang['mobile_no'] = 'Mobile No';
+		$lang['phone_no'] = 'Phone No';
+		$lang['class'] = 'Class';
+		$lang['institute'] = 'Institute';
+		$lang['on_scholarship'] = 'On Scholarship';
+		$lang['scholarship_id'] = 'Scholarship Id';
+		$lang['scholarship_value'] = 'Scholarship Value';
+		$lang['transport'] = 'Transport';
+		$lang['scholarship_name'] = 'Scholarship Name';
+		$lang['student_name'] = 'Student Name';
+		$lang['father_name'] = 'Father Name';
+		$lang['gender'] = 'Gender';
+		$lang['address'] = 'Address';
+		$lang['mobile_no'] = 'Mobile No';
+		$lang['phone_no'] = 'Phone No';
+		$lang['class'] = 'Class';
+		$lang['institute'] = 'Institute';
+		$lang['on_scholarship'] = 'On Scholarship';
+		$lang['scholarship_id'] = 'Scholarship Id';
+		$lang['scholarship_value'] = 'Scholarship Value';
+		$lang['transport'] = 'Transport';
+		$lang['scholarship_name'] = 'Scholarship Name';
+		$lang['Students'] = 'Students';
+		$lang['Student Details'] = 'Student Details';$lang['Trashed Students'] = 'Trashed Students';
+		$lang['Add New Student'] = 'Add New Student';
+		$lang['Edit Student'] = 'Edit Student';
+		
