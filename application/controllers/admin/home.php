@@ -432,5 +432,17 @@ public function remove_the_session_course(){
     }
 
 }
+
+public function delete_subject_installment(){
+    $session_student_fee_id = (int) $this->input->post('session_student_fee_id');
+    $query = "DELETE  FROM `session_student_fees` 
+            WHERE `session_student_fee_id` = '".$session_student_fee_id."' ";
+        if($this->db->query($query)){
+        echo "Fee removed successfully.";
+        }else{
+                echo "Error Try Again";
+        }
+
+}
     
 }        

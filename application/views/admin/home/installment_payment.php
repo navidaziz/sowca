@@ -163,6 +163,7 @@
           <table class="table table-bordered">
             <h4>Installment <?php echo $student_courses_installment->course_installment_no; ?></h4>
             <tr>
+            <td></d>
               <td>Course Name</d>
               <td>Course Fee</d>
               <td>Discount</d>
@@ -173,7 +174,12 @@
               $status = false;
             ?>
 
-              <tr>
+              <tr id="<?php echo $s_c_installment->session_student_fee_id; ?>_row">
+              <td style="text-align: center;">
+              <?php if ($s_c_installment->status == 0) { ?>
+              <a href="javascript: return(false);" onclick="delete_subject_installment('<?php echo $s_c_installment->session_student_fee_id; ?>')">x</a>
+              <?php } ?>
+              </d>
                 <td><?php echo $s_c_installment->course_name; ?></d>
                 <td id="<?php echo $s_c_installment->session_student_fee_id; ?>_fee"><?php echo $s_c_installment->course_fee_total; ?></d>
                 <td>
@@ -189,6 +195,7 @@
 
             <?php } ?>
             <tr>
+            <td></td>
               <td><strong>Total</strong></td>
               <td><strong id="<?php echo $s_c_installment->course_installment_no; ?>_total_fee">
                   <?php
@@ -230,6 +237,21 @@
 
 
 <script>
+
+function delete_subject_installment(session_student_fee_id){
+      $.ajax({
+      type: "POST",
+      url: '<?php echo site_url(ADMIN_DIR.'home/delete_subject_installment'); ?>',
+      data: {
+        session_student_fee_id: session_student_fee_id,
+      }
+      }).done(function(data) {
+        $('#' + session_student_fee_id + '_row').remove();
+      });
+  
+}
+
+
   function update_total(session_student_fee_id, installment) {
 
     var fee = parseInt($('#' + session_student_fee_id + '_fee').html());
