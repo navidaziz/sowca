@@ -725,7 +725,7 @@ function edit_stuent_info(student_id){
 								<?php echo form_error("on_scholarship", "<p class=\"text-danger\">", "</p>"); ?>
 							</div>
 						</div> -->
-					<div class="col-md-4">
+					<!-- <div class="col-md-4">
 
 						<div class="form-group">
 							<?php
@@ -741,8 +741,8 @@ function edit_stuent_info(student_id){
 							?>
 						</div>
 						<?php echo form_error("scholarship_id", "<p class=\"text-danger\">", "</p>"); ?>
-					</div>
-
+					</div> -->
+					<input type="hidden" name="scholarship_id" value="1" />
 					<input type="hidden" name="transport" value="No" />
 					<!--<div class="col-md-4">
 
