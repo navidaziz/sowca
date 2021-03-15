@@ -87,6 +87,9 @@ class Home extends Admin_Controller{
                 echo '</li>';
 
             }
+            echo '<li class="list-group-item"><p style="text-align:center">
+            <button type="button" onclick="$(\'#student_name\').val(\''.ucwords($this->input->post("student_name")).'\')" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#add_new_student_form">Add New Student</button>
+            </p></li>';
             echo '</ul>';
         }else{
             echo '<ul class="list-group list-group-flush">';
