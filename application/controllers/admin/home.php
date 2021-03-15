@@ -78,7 +78,7 @@ class Home extends Admin_Controller{
                     echo '<br /> <strong>Admitted</strong>';
                 }else{
                     
-                    echo '<p style="text-align:center"><button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#admission_form" 
+                    echo '<p style="text-align:center"><button class="btn btn-success btn-sm" data-toggle="modal" data-target="#admission_form" 
                   onclick="get_adminssion_form(\''.$student->student_id.'\')">
                  Add to this session</button></p>';
                 }        
