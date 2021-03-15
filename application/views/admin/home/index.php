@@ -7,6 +7,21 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
+
+<script>
+function edit_stuent_info(student_id){
+		$.ajax({
+				type: "POST",
+				url: '<?php echo site_url(ADMIN_DIR . "home/edit_stuent_info"); ?>',
+				data: {
+					student_id: student_id,
+				}
+			}).done(function(data) {
+				$('#edit_student_info_body').html(data);
+			});
+}
+</script>
+
 <div class="row">
 	<div class="col-sm-12">
 		<div class="page-header" style="min-height: 10px !important;">
@@ -40,8 +55,11 @@
 
 				<div class="table-responsive">
 
-					<h3 style="text-align: center; margin:2px">Session <?php echo "2020" ?></h3>
-					<hr />
+					<h3 style="text-align: center; margin:2px">
+					<?php echo $session->session_name; ?><br />
+					<small style="font-size: 12px;"><?php echo date("d M, Y", strtotime($session->start_date)); ?> - <?php echo date("d M, Y", strtotime($session->end_date)); ?></small>
+					</h3>
+					<hr style="margin-top: -2px;" />
 					<b>Search Student</b> By Name
 					<table style="width: 100%;">
 						<tr>
@@ -164,6 +182,33 @@
 								GROUP BY `students`.`gender`";
 						@$transport_female = $this->db->query($query)->result()[0]->total;
 
+						$query = "SELECT 
+								COUNT(DISTINCT(`session_student_fees`.`student_id`)) AS total
+								FROM
+								  `courses`,
+								  `session_student_fees`,
+								  `students`  
+								WHERE `courses`.`course_id` = `session_student_fees`.`course_id` 
+								AND `students`.`student_id` = `session_student_fees`.`student_id`
+								AND `session_student_fees`.`course_fee_discount` > 0
+								AND `students`.`gender`='female'
+								AND `session_student_fees`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1)
+								GROUP BY `students`.`gender`";
+						@$scholarship_female = $this->db->query($query)->result()[0]->total;
+
+						$query = "SELECT 
+								COUNT(DISTINCT(`session_student_fees`.`student_id`)) AS total
+								FROM
+								  `courses`,
+								  `session_student_fees`,
+								  `students`  
+								WHERE `courses`.`course_id` = `session_student_fees`.`course_id` 
+								AND `students`.`student_id` = `session_student_fees`.`student_id`
+								AND `session_student_fees`.`course_fee_discount` > 0
+								AND `students`.`gender`='male'
+								AND `session_student_fees`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1)
+								GROUP BY `students`.`gender`";
+						@$scholarship_male = $this->db->query($query)->result()[0]->total;
 
 
 						?>
@@ -185,6 +230,12 @@
 								<td><?php echo $transport_male; ?></td>
 							</tr>
 
+
+							<tr>
+								<td>On Scholarship</td>
+								<td><?php echo $scholarship_female; ?></td>
+								<td><?php echo $scholarship_male; ?></td>
+							</tr>
 							<?php
 							$query = "SELECT 
 								`courses`.`class`,
@@ -276,7 +327,7 @@
 											<i class="fa fa-check" aria-hidden="true"></i>
 										<?php } ?>
 									</td>
-									<td><?php echo $student->student_name; ?></td>
+									<td><a aria-hidden="true" data-toggle="modal" data-target="#edit_student_info" href="javascript:return false;" onclick="edit_stuent_info('<?php echo $student->student_id; ?>')" ><?php echo $student->student_name; ?></a></td>
 									<td><?php echo $student->father_name; ?></td>
 									<td><?php echo $student->mobile_no; ?></td>
 									<td><b><?php echo ucfirst(substr($student->gender, 0, 1)); ?></b></td>
@@ -333,7 +384,8 @@
 									<td><i style="color:blue; cursor: pointer;" class="fa fa-edit" aria-hidden="true" data-toggle="modal" data-target="#edit_form" onclick="get_edit_form('<?php echo $student->student_id; ?>')"></i></td>
 									<?php for ($installment = 1; $installment <= $max_installment; $installment++) { ?>
 										<td style="text-align: center;">
-
+										
+										
 											<?php if ($installment <= $max_installment_student) { 
 												$query = "SELECT 
 																COUNT(*) AS total
@@ -805,6 +857,29 @@
 				<h4 class="modal-title">Edit Student Session Courses</h4>
 			</div>
 			<div class="modal-body" id="edit_form_body">
+				<p></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+
+<!-- Modal Student Course Edit form  -->
+<div id="edit_student_info" class="modal fade" role="dialog">
+	<div class="modal-dialog" style="width: 80%;">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Update Student Info</h4>
+			</div>
+			<div class="modal-body" id="edit_student_info_body">
 				<p></p>
 			</div>
 			<div class="modal-footer">

@@ -29,9 +29,9 @@ class Home extends Admin_Controller{
     public function index(){
 
         $this->data["scholarships"] = $this->student_model->getList("scholarships", "scholarship_id", "scholarship_name", $where ="`scholarships`.`status` IN (1) ");
-        $query = "SELECT `session_id` FROM `sessions` WHERE `sessions`.`status` = '1'";
-        $session_id = $this->db->query($query)->result()[0]->session_id;
-        $this->data['session_id'] =  $session_id;
+        $query = "SELECT * FROM `sessions` WHERE `sessions`.`status` = '1'";
+        $this->data['session'] = $session = $this->db->query($query)->result()[0];
+        $this->data['session_id'] =  $session->session_id;
         $query = "SELECT
             `students`.`student_id`,
             `students`.`student_name`
@@ -45,7 +45,7 @@ class Home extends Admin_Controller{
         FROM `session_students`,
             `students` 
         WHERE `session_students`.`student_id` = `students`.`student_id`
-        AND `session_id` = $session_id;";
+        AND `session_id` = $session->session_id;";
 
         $students = $this->db->query($query)->result();
         $this->data['students'] = $students;
@@ -443,6 +443,32 @@ public function delete_subject_installment(){
                 echo "Error Try Again";
         }
 
+}
+
+public function edit_stuent_info(){
+    $student_id = (int) $this->input->post('student_id');
+    $this->data["student"] = $this->student_model->get($student_id);
+    $this->data["scholarships"] = $this->student_model->getList("scholarships", "scholarship_id", "scholarship_name", $where ="`scholarships`.`status` IN (1) ");
+
+    $this->load->view(ADMIN_DIR."home/update_student_info", $this->data);
+    
+}
+
+public function update_student_info_data(){
+
+    
+    $student_id = (int) $this->input->post('student_id');
+     $student_id = $this->student_model->update_data($student_id);
+       if($student_id){
+             
+             $this->session->set_flashdata("msg_success", $this->lang->line("update_msg_success"));
+             redirect(ADMIN_DIR."home/index");
+         }else{
+             
+             $this->session->set_flashdata("msg_error", $this->lang->line("msg_error"));
+             redirect(ADMIN_DIR."home/index");
+         }
+     
 }
     
 }        
