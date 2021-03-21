@@ -149,11 +149,14 @@
 								$max_installment = $this->db->query($query)->result()[0]->max_installment;
 								for ($installment = 1; $installment <= $max_installment; $installment++) { 
 									$query = "SELECT
-									            `courses`.`course_id`,
-												`courses`.`course_name`
-											FROM `courses`,`session_courses`
+												`courses`.`class`
+												, `courses`.`course_name`
+												, `courses`.`course_id`
+											FROM `courses`,
+											`session_courses` 
 											WHERE `courses`.`course_id` = `session_courses`.`course_id`
-											AND `session_courses`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1) 
+											AND  `session_courses`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1)
+											AND class IN('".$classe->class."', '0') 
 									        GROUP BY `course_name` ORDER BY `courses`.`course_id` DESC";
 									$courses = $this->db->query($query)->result();
 									 foreach($courses as $course){
