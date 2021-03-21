@@ -1,0 +1,16 @@
+<?php 
+								$query = "SELECT
+									MAX(`monthly_installment`) AS max_installment
+								FROM `session_courses`
+								WHERE `session_id`= (SELECT session_id FROM sessions WHERE `sessions`.`status`=1);";
+								$max_installment = $this->db->query($query)->result()[0]->max_installment;
+
+								for ($installment = 1; $installment <= $max_installment; $installment++) { ?>
+									$query = "SELECT `course_name` FROM `courses` WHERE `class` = '".$classe->class."' 
+									GROUP BY `course_name` ORDER BY `course_name` ASC";
+									$courses = $this->db->query($query)->result();
+									foreach($courses as $course){ ?>
+										<th><i class="fa fa-credit-card" aria-hidden="true"></i> <?php echo $course->course_name; ?></th>
+									<?php }  
+								} 
+								?>
