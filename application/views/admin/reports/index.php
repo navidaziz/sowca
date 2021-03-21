@@ -160,11 +160,11 @@
 										 $query="SELECT * FROM `session_student_fees`
 										 WHERE `session_student_fees`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1) 
 										 AND `session_student_fees`.`student_id` ='". $student->student_id."'
+										 AND `session_student_fees`.`course_id` ='". $course->course_id."'
 										 AND `session_student_fees`.`course_installment_no` ='".$installment."'
-										ORDER BY `session_student_fees`.`course_id` DESC
 										 ";
-										 $session_student_fee = $this->db->query($query)->result()[0];
-										 echo "<td>".$session_student_fee->course_fee_paid."</td>";
+										 @$session_student_fee = $this->db->query($query)->result()[0];
+										 echo "<td>".@$session_student_fee->course_fee_paid."</td>";
 										}
 									?>
 									
