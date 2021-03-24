@@ -83,7 +83,7 @@
 <?php
 
 $this->load->view(ADMIN_DIR."components/nav.php"); ?>
-<div id="main-content" <?php if($this->router->fetch_class()=='sessions' or $this->router->fetch_class()=='home'){ ?> class="margin-left-50" <?php } ?>  >
+<div id="main-content" <?php if($this->router->fetch_class()=='sessions' or $this->router->fetch_class()=='home' or $this->router->fetch_class()=='reports'){ ?> class="margin-left-50" <?php } ?>  >
 <div class="container">
 <div class="row">
 <div id="content" class="col-lg-12">

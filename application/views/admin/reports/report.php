@@ -39,8 +39,8 @@
 
 				<div class="table-responsive">
 
-				<?php foreach($classes as $classe){ ?>
-				<h4><?php echo $classe->class; ?></h4>
+				<?php foreach($classes as $class){ ?>
+				<h4><?php echo $class->class; ?></h4>
 				    <table id="examp le" class="table table-bordered"  style="font-size: 9px;" >
 						<thead>
 						<tr><td colspan="7">Student Profile</td>
@@ -90,7 +90,7 @@
 						<tbody>
 							<?php 
 							$count = 1;
-							foreach ($classe->students as $student) { ?>
+							foreach ($class->students as $student) { ?>
 
 								<?php
 								$query = "SELECT
@@ -158,7 +158,7 @@
 								`session_courses`
 								WHERE `courses`.`course_id` = `session_courses`.`course_id`
 								AND  `session_courses`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1)
-								AND class IN('".$classe->class."', '0')
+								AND class IN('".$class->class."', '0')
 								GROUP BY `course_name` ORDER BY `courses`.`course_id` DESC";
 									$courses = $this->db->query($query)->result();
 									 foreach($courses as $course){
@@ -206,29 +206,32 @@
 								`session_courses`
 								WHERE `courses`.`course_id` = `session_courses`.`course_id`
 								AND  `session_courses`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1)
-								AND class IN('".$classe->class."', '0')
+								AND class IN('".$class->class."', '0')
 								GROUP BY `course_name` ORDER BY `courses`.`course_id` DESC";
 									$courses = $this->db->query($query)->result();
 									 foreach($courses as $course){
-										 $query="SELECT
-											SUM(`session_student_fees`.`course_fee_paid`) AS total_paid 
-										FROM `courses`,
-										`session_student_fees` 
-										WHERE `courses`.`course_id` = `session_student_fees`.`course_id`
-										AND `session_student_fees`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1)
-										 AND `session_student_fees`.`course_id` ='". $course->course_id."'
-										 AND `session_student_fees`.`course_installment_no` ='".$installment."'
-										 AND `courses`.class = '".$classe->class."'
+										 $query="SELECT 
+										 SUM(`course_fee_paid`) AS total_paid, 
+										 COUNT(`course_fee_paid`) AS total_paid_students  
+										 FROM `students_fee`  
+										 WHERE `session_id` = (SELECT session_id FROM `sessions` WHERE `sessions`.`status`=1)
+										 AND `course_id` ='". $course->course_id."'
+										 AND `course_installment_no` ='".$installment."'
+										 AND `students_fee`.class = '".$class->class."'
 										 ";
 										 @$session_student_fee = $this->db->query($query)->result()[0];
-										 echo "<td>".@$session_student_fee->total_paid."</td>";
+										 echo "<th>".@$session_student_fee->total_paid."</th>";
 										}
 									?>
 									<th>
 									<?php 
-									$query="SELECT sum(course_fee_paid) as total_paid FROM `session_student_fees`
-									WHERE `session_student_fees`.`session_id` = (SELECT session_id FROM sessions WHERE STATUS=1) 
-									AND `session_student_fees`.`course_installment_no` ='".$installment."'
+									$query="SELECT 
+									SUM(`course_fee_paid`) AS total_paid, 
+									COUNT(`course_fee_paid`) AS total_paid_students  
+									FROM `students_fee`  
+									WHERE `session_id` = (SELECT session_id FROM `sessions` WHERE `sessions`.`status`=1)
+									AND `students_fee`.class = '".$class->class."' 
+									AND `students_fee`.`course_installment_no` ='".$installment."'
 									";
 									@$session_student_fee = $this->db->query($query)->result()[0];
 									echo @$session_student_fee->total_paid;

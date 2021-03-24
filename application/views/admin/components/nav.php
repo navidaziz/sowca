@@ -75,7 +75,7 @@
 
 <div id="sidebar"  
 
-<?php if($this->router->fetch_class()=='sessions' or $this->router->fetch_class()=='home'){ ?> class="sidebar mini-menu" <?php }else{ ?>class="sidebar" <?php } ?> >
+<?php if($this->router->fetch_class()=='sessions' or $this->router->fetch_class()=='home' or $this->router->fetch_class()=='reports'){ ?> class="sidebar mini-menu" <?php }else{ ?>class="sidebar" <?php } ?> >
 
  <?php if($this->session->userdata('role_id')==14){
 	 

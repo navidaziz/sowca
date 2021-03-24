@@ -26,79 +26,63 @@ class Reports extends Admin_Controller{
     /**
      * Default action to be called
      */ 
-    public function index(){
-
-        // $query = "SELECT `class` FROM `courses` WHERE `class` != 0 GROUP BY `class` ORDER BY `class` ASC";
-        // $classes = $this->db->query($query)->result();
-
-        // foreach($classes as $classe){
-        //     echo $classe->class.'<br />';
-        //     $query = "SELECT `course_name` FROM `courses` WHERE `class` = '".$classe->class."' GROUP BY `course_name` ORDER BY `course_name` ASC";
-        //     $courses = $this->db->query($query)->result();
-        //     echo '<table border=1><tr>';
-        //     foreach($courses as $course){
-        //         echo "<td>".$course->course_name."</td>";
-        //     }
-        //     echo '</tr></table>';
 
 
-        //     $query = "SELECT
-        //     `students`.`student_id`,
-        //     `students`.`student_name`
-        //     , `students`.`father_name`
-        //     , `students`.`gender`
-        //     , `students`.`mobile_no`
-        //     , `students`.`class`
-        //     , `students`.`on_scholarship`
-        //     , `students`.`transport`
-        //     , `session_students`.`status` as admission_confirmed
-        //     FROM `session_students`,
-        //         `students` 
-        //     WHERE `session_students`.`student_id` = `students`.`student_id`
-        //     AND `students`.`class` = '".$classe->class."'";
-
-        //     $students = $this->db->query($query)->result();  foreach($students as $student){ 
-                
-       
+    public function class_report($session_id){
+        $session_id = (int) $session_id;
+        $query="SELECT * FROM sessions WHERE session_id='".$session_id."'";
+        $this->data['session']= $this->db->query($query)->result()[0]; 
+        $query = "SELECT `class`,`session_id` 
+        FROM `students_fee` 
+        WHERE class!=0 
+        AND session_id = '".$session_id."' 
+        GROUP BY Class ORDER BY class DESC";
+        $classes = $this->db->query($query)->result();
+        $this->data["classes"] = $classes;
+        $this->data["title"] = "Reports";
+		$this->data["view"] = ADMIN_DIR."reports/class_report";
+		$this->load->view(ADMIN_DIR."layout", $this->data); 
+    } 
 
 
-        // }
-
-        // exit();
-
-
-
-        $this->data["scholarships"] = $this->student_model->getList("scholarships", "scholarship_id", "scholarship_name", $where ="`scholarships`.`status` IN (1) ");
-        $query = "SELECT * FROM `sessions` WHERE `sessions`.`status` = '1'";
-        $this->data['session'] = $session = $this->db->query($query)->result()[0];
-        $this->data['session_id'] =  $session->session_id;
-
-        $query = "SELECT `class` FROM `courses` WHERE `class` != 0 GROUP BY `class` ORDER BY `class` ASC";
+    public function report(){
+        
+        $query = "SELECT `class`,`session_id` 
+                  FROM `students_fee` 
+                  WHERE class!=0 
+                  AND session_id = (SELECT session_id FROM `sessions` WHERE `sessions`.`status`=1) 
+                  GROUP BY Class ORDER BY class DESC";
          $classes = $this->db->query($query)->result();
-         foreach($classes as $classe){
-                $query = "SELECT
-                    `students`.`student_id`,
-                    `students`.`student_name`
-                    , `students`.`father_name`
-                    , `students`.`gender`
-                    , `students`.`mobile_no`
-                    , `students`.`class`
-                    , `students`.`on_scholarship`
-                    , `students`.`transport`
-                    , `session_students`.`status` as admission_confirmed
-                FROM `session_students`,
-                    `students` 
-                WHERE `session_students`.`student_id` = `students`.`student_id`
-                AND `students`.`class` = '".$classe->class."'
-                AND `session_id` = $session->session_id;";
-
-                $classe->students = $this->db->query($query)->result();
-                
+         foreach($classes as $class){
+                    $query = "SELECT `student_id`
+                    ,`student_name`
+                    , `father_name`
+                    , `gender`
+                    , `mobile_no`
+                    , `class`
+                    , `on_scholarship` 
+                    FROM students_fee WHERE class='".$class->class."'
+                    AND `session_id` ='".$class->session_id."'
+                    GROUP BY student_id";
+                    $class->students = $this->db->query($query)->result();
+                    
          }
 
-         $this->data['classes'] = $classes;
+        $this->data["classes"] = $classes;
         $this->data["title"] = "Reports";
-		$this->data["view"] = ADMIN_DIR."reports/index";
+		$this->data["view"] = ADMIN_DIR."reports/report";
+		$this->load->view(ADMIN_DIR."layout", $this->data); 
+    }
+
+
+    public function index(){
+
+        $query="Select * FROM sessions ORDER BY session_id DESC";
+        $sessions = $this->db->query($query)->result();
+
+         $this->data['sessions'] = $sessions;
+        $this->data["title"] = "Sessions Reports";
+		$this->data["view"] = ADMIN_DIR."reports/sessions";
 		$this->load->view(ADMIN_DIR."layout", $this->data); 
     }
     //---------------------------------------------------------------
