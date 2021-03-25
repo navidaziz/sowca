@@ -36,8 +36,23 @@ class Reports extends Admin_Controller{
         FROM `students_fee` 
         WHERE class!=0 
         AND session_id = '".$session_id."' 
-        GROUP BY Class ORDER BY class DESC";
+        GROUP BY class ORDER BY class DESC";
         $classes = $this->db->query($query)->result();
+        foreach($classes as $class){
+            $query = "SELECT `student_id`
+            ,`student_name`
+            , `father_name`
+            , `gender`
+            , `mobile_no`
+            , `class`
+            , `on_scholarship` 
+            FROM students_fee WHERE class='".$class->class."'
+            AND `session_id` ='".$class->session_id."'
+            GROUP BY student_id";
+            $class->students = $this->db->query($query)->result();
+    
+        }
+       
         $this->data["classes"] = $classes;
         $this->data["title"] = "Reports";
 		$this->data["view"] = ADMIN_DIR."reports/class_report";
